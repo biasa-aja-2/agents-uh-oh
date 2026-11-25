@@ -17,11 +17,17 @@ WORD = "recalculating"
 
 
 def main():
+    # Gate guard: the sealed scorer only accepts UTF-8 text of 1 to 99
+    # characters that is not only white space. Fail loudly here rather
+    # than shipping an entry the gate would refuse.
+    word = WORD.strip()
+    if not word or len(word) > 99:
+        raise SystemExit("entry word fails the 1-99 character gate")
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8", newline="") as f:
-        f.write(WORD)
+        f.write(word)
     return 0
 
 
